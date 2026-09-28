@@ -1,0 +1,5343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>LectureLens</title>
+
+    <style>
+
+        /* =========================================================
+           DESIGN SYSTEM
+        ========================================================= */
+
+        :root {
+            --background: #f5f5f7;
+            --surface: #ffffff;
+            --surface-soft: #fbfbfd;
+
+            --text: #1d1d1f;
+            --secondary: #6e6e73;
+            --tertiary: #86868b;
+
+            --border: rgba(0, 0, 0, 0.08);
+
+            --blue: #0071e3;
+            --blue-hover: #0077ed;
+            --blue-soft: #edf6ff;
+
+            --red: #ff3b30;
+            --green: #34c759;
+
+            --shadow:
+                0 18px 55px
+                rgba(0, 0, 0, 0.055);
+        }
+
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            background:
+                var(--background);
+
+            color:
+                var(--text);
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "SF Pro Display",
+                "SF Pro Text",
+                "Helvetica Neue",
+                Arial,
+                sans-serif;
+
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color:
+                transparent;
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        nav {
+            height: 56px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding:
+                0 32px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 100;
+
+            background:
+                rgba(
+                    245,
+                    245,
+                    247,
+                    0.78
+                );
+
+            backdrop-filter:
+                saturate(180%)
+                blur(22px);
+
+            -webkit-backdrop-filter:
+                saturate(180%)
+                blur(22px);
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .logo {
+            font-size: 18px;
+
+            font-weight: 650;
+
+            letter-spacing: -0.5px;
+
+            cursor: pointer;
+        }
+
+        .nav-message {
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           LAYOUT
+        ========================================================= */
+
+        main {
+            width:
+                min(
+                    1120px,
+                    92%
+                );
+
+            margin: auto;
+
+            padding:
+                65px 0 120px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+
+        /* =========================================================
+           TYPOGRAPHY
+        ========================================================= */
+
+        .eyebrow {
+            color:
+                var(--blue);
+
+            font-size: 13px;
+
+            font-weight: 650;
+
+            letter-spacing: 0.3px;
+
+            text-transform: uppercase;
+        }
+
+        .page-title {
+            margin:
+                9px 0 7px;
+
+            font-size:
+                clamp(
+                    38px,
+                    6vw,
+                    56px
+                );
+
+            letter-spacing: -2.5px;
+
+            line-height: 1;
+        }
+
+        .page-description {
+            margin: 0;
+
+            color:
+                var(--secondary);
+
+            font-size: 18px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .button {
+            border: 0;
+
+            border-radius: 980px;
+
+            padding:
+                11px 18px;
+
+            font-size: 14px;
+
+            font-weight: 550;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s,
+                background 0.2s,
+                opacity 0.2s;
+        }
+
+        .button:active {
+            transform:
+                scale(0.97);
+        }
+
+        .button:disabled {
+            opacity: 0.45;
+
+            cursor: default;
+
+            transform: none;
+        }
+
+        .primary {
+            background:
+                var(--blue);
+
+            color: white;
+        }
+
+        .primary:hover {
+            background:
+                var(--blue-hover);
+        }
+
+        .secondary {
+            background:
+                #e9e9ed;
+
+            color:
+                var(--text);
+        }
+
+        .secondary:hover {
+            background:
+                #dfdfe4;
+        }
+
+
+        /* =========================================================
+           DASHBOARD
+        ========================================================= */
+
+        .dashboard-header {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-end;
+
+            gap: 30px;
+
+            margin-bottom:
+                48px;
+        }
+
+        .course-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fill,
+                    minmax(
+                        285px,
+                        1fr
+                    )
+                );
+
+            gap: 18px;
+        }
+
+        .course-card {
+            min-height: 215px;
+
+            padding: 25px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 23px;
+
+            background:
+                var(--surface);
+
+            box-shadow:
+                var(--shadow);
+
+            cursor: pointer;
+
+            display: flex;
+
+            flex-direction:
+                column;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .course-card:hover {
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 24px 65px
+                rgba(0, 0, 0, 0.075);
+        }
+
+        .course-code {
+            color:
+                var(--blue);
+
+            font-size: 13px;
+
+            font-weight: 650;
+
+            min-height: 18px;
+        }
+
+        .course-name {
+            margin:
+                12px 0 8px;
+
+            font-size: 23px;
+
+            font-weight: 650;
+
+            letter-spacing: -0.7px;
+        }
+
+        .course-professor {
+            color:
+                var(--secondary);
+
+            font-size: 14px;
+        }
+
+        .course-bottom {
+            margin-top: auto;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+        }
+
+        .course-arrow {
+            width: 31px;
+            height: 31px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 50%;
+
+            background:
+                #f2f2f7;
+
+            color:
+                var(--text);
+
+            font-size: 17px;
+        }
+
+
+        /* =========================================================
+           EMPTY DASHBOARD
+        ========================================================= */
+
+        .empty-dashboard {
+            min-height: 400px;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+        }
+
+        .empty-inner {
+            max-width: 440px;
+        }
+
+        .empty-symbol {
+            width: 62px;
+            height: 62px;
+
+            display: grid;
+
+            place-items: center;
+
+            margin:
+                0 auto 20px;
+
+            border-radius: 19px;
+
+            background:
+                var(--blue-soft);
+
+            color:
+                var(--blue);
+
+            font-size: 27px;
+        }
+
+        .empty-inner h2 {
+            margin:
+                0 0 9px;
+
+            font-size: 27px;
+
+            letter-spacing: -0.8px;
+        }
+
+        .empty-inner p {
+            color:
+                var(--secondary);
+
+            line-height: 1.55;
+
+            margin:
+                0 0 23px;
+        }
+
+
+        /* =========================================================
+           COURSE PAGE
+        ========================================================= */
+
+        .back-button {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap: 6px;
+
+            margin-bottom:
+                35px;
+
+            color:
+                var(--blue);
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            user-select: none;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        .course-page-header {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-end;
+
+            gap: 30px;
+
+            padding-bottom:
+                32px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .course-page-header h1 {
+            margin:
+                8px 0 7px;
+
+            font-size:
+                clamp(
+                    38px,
+                    6vw,
+                    58px
+                );
+
+            letter-spacing: -2.5px;
+
+            line-height: 1;
+        }
+
+        .course-page-professor {
+            color:
+                var(--secondary);
+        }
+
+        .lecture-section {
+            margin-top: 42px;
+        }
+
+        .section-heading {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom:
+                20px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+
+            font-size: 26px;
+
+            letter-spacing: -0.8px;
+        }
+
+
+        /* =========================================================
+           LECTURES
+        ========================================================= */
+
+        .lecture-list {
+            display: grid;
+
+            gap: 12px;
+        }
+
+        .lecture-card {
+            padding:
+                20px 22px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 18px;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.18s,
+                box-shadow 0.18s;
+        }
+
+        .lecture-card:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 14px 35px
+                rgba(0, 0, 0, 0.05);
+        }
+
+        .lecture-title {
+            font-size: 17px;
+
+            font-weight: 600;
+        }
+
+        .lecture-meta {
+            margin-top: 6px;
+
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+        }
+
+        .no-lectures {
+            min-height: 330px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.65
+                );
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 22px;
+        }
+
+        .no-lectures-inner {
+            max-width: 430px;
+
+            padding: 40px;
+        }
+
+        .no-lectures h3 {
+            font-size: 23px;
+
+            margin:
+                0 0 8px;
+        }
+
+        .no-lectures p {
+            color:
+                var(--secondary);
+
+            line-height: 1.5;
+
+            margin:
+                0 0 22px;
+        }
+
+
+        /* =========================================================
+           UPLOAD
+        ========================================================= */
+
+        .upload-page {
+            max-width: 780px;
+
+            margin: auto;
+        }
+
+        .upload-page-header {
+            margin-bottom: 30px;
+        }
+
+        .upload-page-header h1 {
+            font-size: 42px;
+
+            letter-spacing: -1.7px;
+
+            margin:
+                7px 0;
+        }
+
+        .upload-card {
+            padding: 12px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .drop-zone {
+            min-height: 270px;
+
+            border:
+                1.5px dashed
+                #c7c7cc;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            flex-direction:
+                column;
+
+            justify-content:
+                center;
+
+            align-items:
+                center;
+
+            text-align: center;
+
+            padding: 35px;
+
+            transition:
+                background 0.2s,
+                border 0.2s;
+        }
+
+        .drop-zone.dragging {
+            border-color:
+                var(--blue);
+
+            background:
+                var(--blue-soft);
+        }
+
+        .upload-icon {
+            width: 53px;
+            height: 53px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 16px;
+
+            background:
+                #f2f2f7;
+
+            font-size: 27px;
+
+            margin-bottom: 17px;
+        }
+
+        .drop-zone h2 {
+            margin:
+                0 0 8px;
+
+            font-size: 20px;
+        }
+
+        .drop-zone p {
+            margin:
+                0 0 22px;
+
+            color:
+                var(--secondary);
+
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .filename {
+            margin-top: 15px;
+
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+        }
+
+        .upload-actions {
+            display: flex;
+
+            gap: 9px;
+
+            margin-top: 12px;
+        }
+
+        .upload-actions button {
+            flex: 1;
+        }
+
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        .progress-card {
+            display: none;
+
+            margin-top: 17px;
+
+            padding:
+                23px 25px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+        }
+
+        .progress-status {
+            color:
+                var(--secondary);
+
+            font-size: 14px;
+        }
+
+        .progress-number {
+            font-size: 27px;
+
+            font-weight: 650;
+
+            letter-spacing: -1px;
+        }
+
+        .progress-track {
+            height: 8px;
+
+            margin-top: 17px;
+
+            border-radius: 100px;
+
+            background:
+                #e5e5ea;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+
+            background:
+                var(--blue);
+
+            transition:
+                width 0.35s;
+        }
+
+
+        /* =========================================================
+           WORKSPACE
+        ========================================================= */
+
+        .workspace-header {
+            margin-bottom: 26px;
+        }
+
+        .workspace-header h1 {
+            margin:
+                8px 0 7px;
+
+            font-size: 42px;
+
+            letter-spacing: -1.8px;
+        }
+
+        .player-card {
+            padding: 20px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 22px;
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .player-label {
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+
+            margin-bottom: 11px;
+        }
+
+        video,
+        audio {
+            width: 100%;
+
+            display: block;
+
+            border-radius: 13px;
+        }
+
+        video {
+            max-height: 480px;
+
+            background: black;
+        }
+
+
+        /* =========================================================
+           TABS
+        ========================================================= */
+
+        .tabs {
+            width:
+                fit-content;
+
+            display: flex;
+
+            gap: 5px;
+
+            margin:
+                20px 0 15px;
+
+            padding: 5px;
+
+            background:
+                #e8e8ed;
+
+            border-radius: 13px;
+        }
+
+        .tab {
+            border: 0;
+
+            background:
+                transparent;
+
+            padding:
+                9px 15px;
+
+            border-radius: 9px;
+
+            color:
+                var(--secondary);
+
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background:
+                white;
+
+            color:
+                var(--text);
+
+            box-shadow:
+                0 1px 5px
+                rgba(0, 0, 0, 0.09);
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .content-card {
+            min-height: 400px;
+
+            padding: 27px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 22px;
+        }
+
+
+        /* =========================================================
+           TRANSCRIPT
+        ========================================================= */
+
+        .transcript-toolbar {
+            display: flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .search-input {
+            width: 290px;
+
+            max-width: 100%;
+
+            border:
+                1px solid
+                #d2d2d7;
+
+            border-radius: 12px;
+
+            padding:
+                10px 13px;
+
+            outline: none;
+
+            background:
+                #fafafa;
+        }
+
+        .search-input:focus {
+            border-color:
+                var(--blue);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 113, 227, 0.11);
+        }
+
+        .transcript-line {
+            display: grid;
+
+            grid-template-columns:
+                70px 1fr;
+
+            gap: 15px;
+
+            padding:
+                13px 7px;
+
+            border-bottom:
+                1px solid
+                var(--border);
+        }
+
+        .timestamp {
+            color:
+                var(--blue);
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        .timestamp:hover {
+            text-decoration: underline;
+        }
+
+        .transcript-text {
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           AI CONTENT
+        ========================================================= */
+
+        .ai-empty {
+            min-height: 340px;
+
+            display: flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            text-align: center;
+        }
+
+        .ai-empty-inner {
+            max-width: 450px;
+        }
+
+        .ai-symbol {
+            width: 50px;
+            height: 50px;
+
+            display: grid;
+
+            place-items: center;
+
+            margin:
+                0 auto 15px;
+
+            border-radius: 15px;
+
+            background:
+                var(--blue-soft);
+
+            color:
+                var(--blue);
+
+            font-size: 22px;
+        }
+
+        .ai-empty h3 {
+            margin:
+                0 0 8px;
+
+            font-size: 22px;
+        }
+
+        .ai-empty p {
+            color:
+                var(--secondary);
+
+            line-height: 1.5;
+
+            margin:
+                0 0 20px;
+        }
+
+        .ai-output {
+            white-space: pre-wrap;
+
+            line-height: 1.8;
+
+            font-size: 15px;
+        }
+
+        .ai-output:empty {
+            display: none;
+        }
+
+
+        /* =========================================================
+           ASK LECTURE
+        ========================================================= */
+
+        .ask-header h3 {
+            margin:
+                0 0 6px;
+
+            font-size: 23px;
+        }
+
+        .ask-header p {
+            margin: 0;
+
+            color:
+                var(--secondary);
+        }
+
+        .suggestions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin:
+                20px 0;
+        }
+
+        .suggestion {
+            border:
+                1px solid
+                var(--border);
+
+            background:
+                #fafafa;
+
+            border-radius: 100px;
+
+            padding:
+                8px 12px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+        .suggestion:hover {
+            background:
+                var(--blue-soft);
+        }
+
+        .ask-row {
+            display: flex;
+
+            gap: 9px;
+        }
+
+        .ask-input {
+            flex: 1;
+
+            border:
+                1px solid
+                #d2d2d7;
+
+            border-radius: 14px;
+
+            padding:
+                13px 15px;
+
+            outline: none;
+        }
+
+        .ask-input:focus {
+            border-color:
+                var(--blue);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 113, 227, 0.11);
+        }
+
+        .answer {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background:
+                var(--blue-soft);
+
+            border-radius: 15px;
+
+            white-space: pre-wrap;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           NOTICE
+        ========================================================= */
+
+        .notice {
+            margin-bottom: 20px;
+
+            padding:
+                13px 15px;
+
+            background:
+                #f2f2f7;
+
+            border-radius: 12px;
+
+            color:
+                var(--secondary);
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+
+        .modal-backdrop {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1000;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding: 20px;
+
+            background:
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.28
+                );
+
+            backdrop-filter:
+                blur(12px);
+
+            -webkit-backdrop-filter:
+                blur(12px);
+        }
+
+        .modal-backdrop.visible {
+            display: flex;
+        }
+
+        .modal {
+            width:
+                min(
+                    500px,
+                    100%
+                );
+
+            padding: 27px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.97
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.5
+                );
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 30px 90px
+                rgba(0, 0, 0, 0.18);
+        }
+
+        .modal-top {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-start;
+
+            margin-bottom: 27px;
+        }
+
+        .modal h2 {
+            margin:
+                0 0 6px;
+
+            font-size: 27px;
+
+            letter-spacing: -0.8px;
+        }
+
+        .modal-description {
+            margin: 0;
+
+            color:
+                var(--secondary);
+
+            font-size: 14px;
+        }
+
+        .close-button {
+            width: 31px;
+            height: 31px;
+
+            border: 0;
+
+            border-radius: 50%;
+
+            background:
+                #ededf0;
+
+            cursor: pointer;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field-header {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            margin-bottom: 7px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .optional {
+            color:
+                var(--secondary);
+
+            font-weight: 400;
+        }
+
+        .field input {
+            width: 100%;
+
+            border:
+                1px solid
+                #d2d2d7;
+
+            border-radius: 12px;
+
+            padding:
+                12px 13px;
+
+            background:
+                white;
+
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color:
+                var(--blue);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 113, 227, 0.11);
+        }
+
+        .modal-actions {
+            display: flex;
+
+            justify-content:
+                flex-end;
+
+            gap: 9px;
+
+            margin-top: 26px;
+        }
+
+        .form-error {
+            min-height: 18px;
+
+            color:
+                var(--red);
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media(max-width: 700px) {
+
+            nav {
+                padding:
+                    0 18px;
+            }
+
+            .nav-message {
+                display: none;
+            }
+
+            main {
+                padding-top: 42px;
+            }
+
+            .dashboard-header,
+            .course-page-header {
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
+            .course-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .upload-actions,
+            .ask-row {
+                flex-direction:
+                    column;
+            }
+
+            .tabs {
+                width: 100%;
+
+                overflow-x: auto;
+            }
+
+            .tab {
+                white-space: nowrap;
+            }
+
+            .transcript-toolbar {
+                flex-direction:
+                    column;
+
+                align-items:
+                    stretch;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .transcript-line {
+                grid-template-columns:
+                    55px 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav>
+
+        <div
+            class="logo"
+            onclick="showDashboard()"
+        >
+            LectureLens
+        </div>
+
+        <div class="nav-message">
+            Learn from what was actually said.
+        </div>
+
+    </nav>
+
+
+    <main>
+
+
+        <!-- =================================================
+             DASHBOARD
+        ================================================== -->
+
+        <section
+            id="dashboardView"
+            class="view active"
+        >
+
+            <div class="dashboard-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        My Courses
+                    </div>
+
+                    <h1 class="page-title">
+                        Your courses.
+                    </h1>
+
+                    <p class="page-description">
+                        Everything you're learning,
+                        in one place.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="button primary"
+                    onclick="openCourseModal()"
+                >
+                    + New Course
+                </button>
+
+            </div>
+
+
+            <div
+                id="courseGrid"
+                class="course-grid"
+            ></div>
+
+
+            <div
+                id="emptyDashboard"
+                class="empty-dashboard"
+            >
+
+                <div class="empty-inner">
+
+                    <div class="empty-symbol">
+                        ◎
+                    </div>
+
+                    <h2>
+                        Your semester starts here.
+                    </h2>
+
+                    <p>
+                        Create your first course to organize
+                        lecture recordings, transcripts,
+                        study notes, and everything you
+                        need to learn.
+                    </p>
+
+                    <button
+                        class="button primary"
+                        onclick="openCourseModal()"
+                    >
+                        + Create Course
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COURSE VIEW
+        ================================================== -->
+
+        <section
+            id="courseView"
+            class="view"
+        >
+
+            <div
+                class="back-button"
+                onclick="showDashboard()"
+            >
+                ← All Courses
+            </div>
+
+
+            <div class="course-page-header">
+
+                <div>
+
+                    <div
+                        id="coursePageCode"
+                        class="eyebrow"
+                    ></div>
+
+                    <h1
+                        id="coursePageName"
+                    >
+                        Course
+                    </h1>
+
+                    <div
+                        id="coursePageProfessor"
+                        class="course-page-professor"
+                    ></div>
+
+                </div>
+
+
+                <button
+                    class="button primary"
+                    onclick="openLectureUpload()"
+                >
+                    + Add Lecture
+                </button>
+
+            </div>
+
+
+            <div class="lecture-section">
+
+                <div class="section-heading">
+
+                    <h2>
+                        Lectures
+                    </h2>
+
+                    <div
+                        id="lectureCount"
+                        style="
+                            color:#6e6e73;
+                            font-size:14px;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="lectureList"
+                    class="lecture-list"
+                ></div>
+
+
+                <div
+                    id="noLectures"
+                    class="no-lectures"
+                >
+
+                    <div class="no-lectures-inner">
+
+                        <div
+                            class="empty-symbol"
+                            style="
+                                width:52px;
+                                height:52px;
+                            "
+                        >
+                            +
+                        </div>
+
+                        <h3>
+                            Add your first lecture.
+                        </h3>
+
+                        <p>
+                            Upload an audio or video recording
+                            and LectureLens will turn it into
+                            material you can actually study.
+                        </p>
+
+                        <button
+                            class="button primary"
+                            onclick="openLectureUpload()"
+                        >
+                            + Add Lecture
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             UPLOAD VIEW
+        ================================================== -->
+
+        <section
+            id="uploadView"
+            class="view"
+        >
+
+            <div class="upload-page">
+
+                <div
+                    class="back-button"
+                    onclick="returnToCourse()"
+                >
+                    ← Back to Course
+                </div>
+
+
+                <div class="upload-page-header">
+
+                    <div
+                        id="uploadCourseCode"
+                        class="eyebrow"
+                    >
+                        New Lecture
+                    </div>
+
+                    <h1>
+                        Add a lecture.
+                    </h1>
+
+                    <p class="page-description">
+                        Upload an audio or video recording.
+                    </p>
+
+                </div>
+
+
+                <div class="upload-card">
+
+                    <div
+                        id="dropZone"
+                        class="drop-zone"
+                    >
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <h2>
+                            Choose your recording
+                        </h2>
+
+                        <p>
+                            MP3, M4A, WAV, MP4, MOV,
+                            WEBM, AAC or FLAC
+                        </p>
+
+                        <label
+                            for="mediaFile"
+                            class="button secondary"
+                        >
+                            Choose File
+                        </label>
+
+                        <input
+                            id="mediaFile"
+                            type="file"
+                            accept=".mp3,.m4a,.wav,.mp4,.mov,.webm,.aac,.flac"
+                        >
+
+                        <div
+                            id="filename"
+                            class="filename"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="upload-actions">
+
+                        <button
+                            id="processButton"
+                            class="button primary"
+                            onclick="startTranscription()"
+                        >
+                            Process Lecture
+                        </button>
+
+                        <button
+                            class="button secondary"
+                            onclick="clearSelectedFile()"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="progressCard"
+                    class="progress-card"
+                >
+
+                    <div class="progress-header">
+
+                        <div
+                            id="progressStatus"
+                            class="progress-status"
+                        >
+                            Preparing...
+                        </div>
+
+                        <div
+                            id="progressNumber"
+                            class="progress-number"
+                        >
+                            0%
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            id="progressFill"
+                            class="progress-fill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LECTURE WORKSPACE
+        ================================================== -->
+
+        <section
+            id="workspaceView"
+            class="view"
+        >
+
+            <div
+                class="back-button"
+                onclick="returnToCourse()"
+            >
+                ← Back to Course
+            </div>
+
+
+            <div class="workspace-header">
+
+                <div
+                    id="workspaceCourse"
+                    class="eyebrow"
+                ></div>
+
+                <h1
+                    id="lectureTitle"
+                >
+                    Lecture
+                </h1>
+
+                <div
+                    id="lectureMeta"
+                    class="course-page-professor"
+                ></div>
+
+            </div>
+
+
+            <div class="player-card">
+
+                <div class="player-label">
+                    Original recording
+                </div>
+
+                <div
+                    id="mediaContainer"
+                ></div>
+
+            </div>
+
+
+            <div class="tabs">
+
+                <button
+                    class="tab active"
+                    data-tab="transcript"
+                    onclick="showTab('transcript', this)"
+                >
+                    Transcript
+                </button>
+
+                <button
+                    class="tab"
+                    data-tab="study"
+                    onclick="showTab('study', this)"
+                >
+                    Study
+                </button>
+
+                <button
+                    class="tab"
+                    data-tab="ask"
+                    onclick="showTab('ask', this)"
+                >
+                    Ask Lecture
+                </button>
+
+                <button
+                    class="tab"
+                    data-tab="signals"
+                    onclick="showTab('signals', this)"
+                >
+                    Exam Signals
+                </button>
+
+            </div>
+
+
+            <!-- =============================================
+                 TRANSCRIPT
+            ============================================== -->
+
+            <div
+                id="transcriptPanel"
+                class="panel active"
+            >
+
+                <div class="content-card">
+
+                    <div class="transcript-toolbar">
+
+                        <strong>
+                            Timestamped transcript
+                        </strong>
+
+                        <input
+                            id="transcriptSearch"
+                            class="search-input"
+                            placeholder="Search this lecture"
+                            oninput="searchTranscript()"
+                        >
+
+                    </div>
+
+
+                    <div
+                        id="transcript"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 STUDY
+            ============================================== -->
+
+            <div
+                id="studyPanel"
+                class="panel"
+            >
+
+                <div class="content-card">
+
+                    <div
+                        id="studyEmpty"
+                        class="ai-empty"
+                    >
+
+                        <div class="ai-empty-inner">
+
+                            <div class="ai-symbol">
+                                ✦
+                            </div>
+
+                            <h3>
+                                Study this lecture
+                            </h3>
+
+                            <p>
+                                Turn your professor's lecture
+                                into organized concepts,
+                                explanations, examples,
+                                and key takeaways.
+                            </p>
+
+                            <button
+                                id="studyButton"
+                                class="button primary"
+                                onclick="generateStudyNotes()"
+                            >
+                                Create Study Guide
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="studyOutput"
+                        class="ai-output"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 ASK
+            ============================================== -->
+
+            <div
+                id="askPanel"
+                class="panel"
+            >
+
+                <div class="content-card">
+
+                    <div class="ask-header">
+
+                        <h3>
+                            Ask your lecture
+                        </h3>
+
+                        <p>
+                            Get answers grounded in what
+                            your professor actually said.
+                        </p>
+
+                    </div>
+
+
+                    <div class="suggestions">
+
+                        <button
+                            class="suggestion"
+                            onclick="useQuestion(
+                                'What are the most important concepts in this lecture?'
+                            )"
+                        >
+                            Important concepts
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            onclick="useQuestion(
+                                'What examples did the professor give?'
+                            )"
+                        >
+                            Professor's examples
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            onclick="useQuestion(
+                                'What did the professor emphasize?'
+                            )"
+                        >
+                            What was emphasized?
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            onclick="useQuestion(
+                                'Explain this lecture in simpler language.'
+                            )"
+                        >
+                            Explain simply
+                        </button>
+
+                    </div>
+
+
+                    <div class="ask-row">
+
+                        <input
+                            id="question"
+                            class="ask-input"
+                            placeholder="Ask anything about this lecture..."
+                            onkeydown="
+                                if(event.key === 'Enter') {
+                                    askLecture();
+                                }
+                            "
+                        >
+
+                        <button
+                            id="askButton"
+                            class="button primary"
+                            onclick="askLecture()"
+                        >
+                            Ask
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="answer"
+                        class="answer"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 EXAM SIGNALS
+            ============================================== -->
+
+            <div
+                id="signalsPanel"
+                class="panel"
+            >
+
+                <div class="content-card">
+
+                    <div class="notice">
+
+                        Exam Signals identifies concepts
+                        your professor emphasized,
+                        repeated, or explicitly described
+                        as important.
+
+                        It does not predict what will
+                        appear on an exam.
+
+                    </div>
+
+
+                    <div
+                        id="signalsEmpty"
+                        class="ai-empty"
+                    >
+
+                        <div class="ai-empty-inner">
+
+                            <div class="ai-symbol">
+                                ◎
+                            </div>
+
+                            <h3>
+                                Find study signals
+                            </h3>
+
+                            <p>
+                                See which concepts received
+                                the most emphasis, repetition,
+                                explanation, or warnings.
+                            </p>
+
+                            <button
+                                id="signalsButton"
+                                class="button primary"
+                                onclick="generateSignals()"
+                            >
+                                Analyze Lecture
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="signalsOutput"
+                        class="ai-output"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         NEW COURSE MODAL
+    ====================================================== -->
+
+    <div
+        id="courseModal"
+        class="modal-backdrop"
+    >
+
+        <div class="modal">
+
+            <div class="modal-top">
+
+                <div>
+
+                    <h2>
+                        New Course
+                    </h2>
+
+                    <p class="modal-description">
+                        Keep your lectures organized.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    onclick="closeCourseModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-header">
+
+                    <span>
+                        Course Name
+                    </span>
+
+                </div>
+
+                <input
+                    id="courseNameInput"
+                    placeholder="Anatomy & Physiology I"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-header">
+
+                    <span>
+                        Course Code
+                    </span>
+
+                    <span class="optional">
+                        Optional
+                    </span>
+
+                </div>
+
+                <input
+                    id="courseCodeInput"
+                    placeholder="BIO 181"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="field-header">
+
+                    <span>
+                        Professor
+                    </span>
+
+                    <span class="optional">
+                        Optional
+                    </span>
+
+                </div>
+
+                <input
+                    id="professorInput"
+                    placeholder="Dr. Smith"
+                >
+
+            </div>
+
+
+            <div
+                id="courseFormError"
+                class="form-error"
+            ></div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    class="button secondary"
+                    onclick="closeCourseModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="createCourseButton"
+                    class="button primary"
+                    onclick="createCourse()"
+                >
+                    Create Course
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =========================================================
+           STATE
+        ========================================================= */
+
+        let currentCourse =
+            null;
+
+        let currentJobId =
+            null;
+
+        let currentLectureId =
+            null;
+
+        let currentFile =
+            null;
+
+        let currentSegments =
+            [];
+
+        let currentMedia =
+            null;
+
+        let currentMediaURL =
+            null;
+
+        let progressSource =
+            null;
+
+        let currentLectureIsSaved =
+            false;
+
+
+        /* =========================================================
+           INITIALIZE
+        ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+
+            function() {
+
+                loadCourses();
+
+            }
+        );
+
+
+        /* =========================================================
+           VIEW MANAGEMENT
+        ========================================================= */
+
+        function showView(
+            viewId
+        ) {
+
+            document
+            .querySelectorAll(
+                ".view"
+            )
+            .forEach(
+                function(view) {
+
+                    view.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+            .getElementById(
+                viewId
+            )
+            .classList.add(
+                "active"
+            );
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        function showDashboard() {
+
+            if (
+                currentMedia
+            ) {
+
+                currentMedia.pause();
+
+            }
+
+
+            showView(
+                "dashboardView"
+            );
+
+
+            loadCourses();
+
+        }
+
+
+        async function returnToCourse() {
+
+            if (
+                currentMedia
+            ) {
+
+                currentMedia.pause();
+
+            }
+
+
+            if (!currentCourse) {
+
+                showDashboard();
+
+                return;
+
+            }
+
+
+            await openCourse(
+                currentCourse.id
+            );
+
+        }
+
+
+        /* =========================================================
+           COURSES
+        ========================================================= */
+
+        async function loadCourses() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/courses"
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not load courses."
+                    );
+
+                }
+
+
+                renderCourses(
+                    data.courses
+                    || []
+                );
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    error
+                );
+
+            }
+
+        }
+
+
+        function renderCourses(
+            courses
+        ) {
+
+            const grid =
+                document.getElementById(
+                    "courseGrid"
+                );
+
+
+            const empty =
+                document.getElementById(
+                    "emptyDashboard"
+                );
+
+
+            grid.innerHTML =
+                "";
+
+
+            if (!courses.length) {
+
+                grid.style.display =
+                    "none";
+
+
+                empty.style.display =
+                    "flex";
+
+
+                return;
+
+            }
+
+
+            grid.style.display =
+                "grid";
+
+
+            empty.style.display =
+                "none";
+
+
+            courses.forEach(
+                function(course) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "course-card";
+
+
+                    card.onclick =
+                        function() {
+
+                            openCourse(
+                                course.id
+                            );
+
+                        };
+
+
+                    const code =
+                        course.code
+                        ||
+                        "COURSE";
+
+
+                    const professor =
+                        course.professor
+                        ||
+                        "Professor not added";
+
+
+                    const lectureCount =
+                        Number(
+                            course.lecture_count
+                            || 0
+                        );
+
+
+                    const lectureText =
+                        lectureCount === 1
+                        ?
+                        "1 lecture"
+                        :
+                        `${lectureCount} lectures`;
+
+
+                    card.innerHTML = `
+
+                        <div class="course-code">
+                            ${escapeHTML(code)}
+                        </div>
+
+                        <div class="course-name">
+                            ${escapeHTML(course.name)}
+                        </div>
+
+                        <div class="course-professor">
+                            ${escapeHTML(professor)}
+                        </div>
+
+                        <div class="course-bottom">
+
+                            <span>
+                                ${lectureText}
+                            </span>
+
+                            <div class="course-arrow">
+                                →
+                            </div>
+
+                        </div>
+                    `;
+
+
+                    grid.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           COURSE MODAL
+        ========================================================= */
+
+        function openCourseModal() {
+
+            document
+            .getElementById(
+                "courseModal"
+            )
+            .classList.add(
+                "visible"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    document
+                    .getElementById(
+                        "courseNameInput"
+                    )
+                    .focus();
+
+                },
+                50
+            );
+
+        }
+
+
+        function closeCourseModal() {
+
+            document
+            .getElementById(
+                "courseModal"
+            )
+            .classList.remove(
+                "visible"
+            );
+
+
+            document
+            .getElementById(
+                "courseFormError"
+            )
+            .innerText =
+                "";
+
+        }
+
+
+        document
+        .getElementById(
+            "courseModal"
+        )
+        .addEventListener(
+            "click",
+
+            function(event) {
+
+                if (
+                    event.target
+                    === this
+                ) {
+
+                    closeCourseModal();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+
+            function(event) {
+
+                if (
+                    event.key
+                    === "Escape"
+                ) {
+
+                    closeCourseModal();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           CREATE COURSE
+        ========================================================= */
+
+        async function createCourse() {
+
+            const name =
+                document
+                .getElementById(
+                    "courseNameInput"
+                )
+                .value
+                .trim();
+
+
+            const code =
+                document
+                .getElementById(
+                    "courseCodeInput"
+                )
+                .value
+                .trim();
+
+
+            const professor =
+                document
+                .getElementById(
+                    "professorInput"
+                )
+                .value
+                .trim();
+
+
+            const errorBox =
+                document.getElementById(
+                    "courseFormError"
+                );
+
+
+            const button =
+                document.getElementById(
+                    "createCourseButton"
+                );
+
+
+            errorBox.innerText =
+                "";
+
+
+            if (!name) {
+
+                errorBox.innerText =
+                    "Enter a course name.";
+
+                return;
+
+            }
+
+
+            button.disabled =
+                true;
+
+
+            button.innerText =
+                "Creating...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+
+                        "/api/courses",
+
+                        {
+                            method:
+                                "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    name:
+                                        name,
+
+                                    code:
+                                        code,
+
+                                    professor:
+                                        professor
+                                })
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not create course."
+                    );
+
+                }
+
+
+                document
+                .getElementById(
+                    "courseNameInput"
+                )
+                .value =
+                    "";
+
+
+                document
+                .getElementById(
+                    "courseCodeInput"
+                )
+                .value =
+                    "";
+
+
+                document
+                .getElementById(
+                    "professorInput"
+                )
+                .value =
+                    "";
+
+
+                closeCourseModal();
+
+
+                await openCourse(
+                    data.course.id
+                );
+
+            }
+
+            catch(error) {
+
+                errorBox.innerText =
+                    error.message;
+
+            }
+
+            finally {
+
+                button.disabled =
+                    false;
+
+
+                button.innerText =
+                    "Create Course";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           OPEN COURSE
+        ========================================================= */
+
+        async function openCourse(
+            courseId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/courses/${courseId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not open course."
+                    );
+
+                }
+
+
+                currentCourse =
+                    data.course;
+
+
+                document
+                .getElementById(
+                    "coursePageCode"
+                )
+                .innerText =
+                    currentCourse.code
+                    ||
+                    "COURSE";
+
+
+                document
+                .getElementById(
+                    "coursePageName"
+                )
+                .innerText =
+                    currentCourse.name;
+
+
+                document
+                .getElementById(
+                    "coursePageProfessor"
+                )
+                .innerText =
+                    currentCourse.professor
+                    ||
+                    "Professor not added";
+
+
+                renderLectures(
+                    data.lectures
+                    || []
+                );
+
+
+                showView(
+                    "courseView"
+                );
+
+            }
+
+            catch(error) {
+
+                alert(
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           LECTURE LIST
+        ========================================================= */
+
+        function renderLectures(
+            lectures
+        ) {
+
+            const list =
+                document.getElementById(
+                    "lectureList"
+                );
+
+
+            const empty =
+                document.getElementById(
+                    "noLectures"
+                );
+
+
+            const count =
+                document.getElementById(
+                    "lectureCount"
+                );
+
+
+            list.innerHTML =
+                "";
+
+
+            count.innerText =
+                lectures.length === 1
+                ?
+                "1 lecture"
+                :
+                `${lectures.length} lectures`;
+
+
+            if (!lectures.length) {
+
+                list.style.display =
+                    "none";
+
+
+                empty.style.display =
+                    "flex";
+
+
+                return;
+
+            }
+
+
+            list.style.display =
+                "grid";
+
+
+            empty.style.display =
+                "none";
+
+
+            lectures.forEach(
+                function(lecture) {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "lecture-card";
+
+
+                    card.onclick =
+                        function() {
+
+                            openSavedLecture(
+                                lecture.id
+                            );
+
+                        };
+
+
+                    card.innerHTML = `
+
+                        <div>
+
+                            <div class="lecture-title">
+                                ${escapeHTML(
+                                    lecture.title
+                                )}
+                            </div>
+
+                            <div class="lecture-meta">
+
+                                ${formatDuration(
+                                    lecture.duration
+                                    || 0
+                                )}
+
+                                · Saved
+
+                            </div>
+
+                        </div>
+
+                        <div class="course-arrow">
+                            →
+                        </div>
+                    `;
+
+
+                    list.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           OPEN SAVED LECTURE
+        ========================================================= */
+
+        async function openSavedLecture(
+            lectureId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/lectures/${lectureId}`
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not open lecture."
+                    );
+
+                }
+
+
+                currentLectureId =
+                    lectureId;
+
+
+                currentJobId =
+                    null;
+
+
+                currentLectureIsSaved =
+                    true;
+
+
+                currentFile =
+                    null;
+
+
+                currentSegments =
+                    data.segments
+                    || [];
+
+
+                currentMediaURL =
+                    `/saved-media/${lectureId}`;
+
+
+                document
+                .getElementById(
+                    "workspaceCourse"
+                )
+                .innerText =
+                    currentCourse.code
+                    ||
+                    currentCourse.name;
+
+
+                document
+                .getElementById(
+                    "lectureTitle"
+                )
+                .innerText =
+                    data.lecture.title;
+
+
+                document
+                .getElementById(
+                    "lectureMeta"
+                )
+                .innerText =
+                    `${formatDuration(
+                        data.lecture.duration
+                    )} · Saved lecture`;
+
+
+                document
+                .getElementById(
+                    "transcriptSearch"
+                )
+                .value =
+                    "";
+
+
+                resetAIWorkspace();
+
+
+                resetTabs();
+
+
+                renderTranscript(
+                    currentSegments
+                );
+
+
+                createSavedMediaPlayer(
+                    data.lecture
+                );
+
+
+                if (
+                    data.study_notes
+                ) {
+
+                    document
+                    .getElementById(
+                        "studyEmpty"
+                    )
+                    .style.display =
+                        "none";
+
+
+                    const output =
+                        document.getElementById(
+                            "studyOutput"
+                        );
+
+
+                    output.innerText =
+                        data.study_notes;
+
+
+                    makeCitationsClickable(
+                        output
+                    );
+
+                }
+
+
+                if (
+                    data.exam_signals
+                ) {
+
+                    document
+                    .getElementById(
+                        "signalsEmpty"
+                    )
+                    .style.display =
+                        "none";
+
+
+                    const output =
+                        document.getElementById(
+                            "signalsOutput"
+                        );
+
+
+                    output.innerText =
+                        data.exam_signals;
+
+
+                    makeCitationsClickable(
+                        output
+                    );
+
+                }
+
+
+                showView(
+                    "workspaceView"
+                );
+
+            }
+
+            catch(error) {
+
+                alert(
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           UPLOAD PAGE
+        ========================================================= */
+
+        function openLectureUpload() {
+
+            if (!currentCourse) {
+
+                return;
+
+            }
+
+
+            resetUpload();
+
+
+            document
+            .getElementById(
+                "uploadCourseCode"
+            )
+            .innerText =
+                currentCourse.code
+                ||
+                currentCourse.name;
+
+
+            showView(
+                "uploadView"
+            );
+
+        }
+
+
+        /* =========================================================
+           FILE SELECTION
+        ========================================================= */
+
+        const fileInput =
+            document.getElementById(
+                "mediaFile"
+            );
+
+
+        const dropZone =
+            document.getElementById(
+                "dropZone"
+            );
+
+
+        fileInput.addEventListener(
+            "change",
+
+            function() {
+
+                if (
+                    this.files.length
+                ) {
+
+                    selectFile(
+                        this.files[0]
+                    );
+
+                }
+
+            }
+        );
+
+
+        function selectFile(
+            file
+        ) {
+
+            currentFile =
+                file;
+
+
+            document
+            .getElementById(
+                "filename"
+            )
+            .innerText =
+                file.name;
+
+        }
+
+
+        /* =========================================================
+           DRAG & DROP
+        ========================================================= */
+
+        dropZone.addEventListener(
+            "dragover",
+
+            function(event) {
+
+                event.preventDefault();
+
+
+                dropZone.classList.add(
+                    "dragging"
+                );
+
+            }
+        );
+
+
+        dropZone.addEventListener(
+            "dragleave",
+
+            function() {
+
+                dropZone.classList.remove(
+                    "dragging"
+                );
+
+            }
+        );
+
+
+        dropZone.addEventListener(
+            "drop",
+
+            function(event) {
+
+                event.preventDefault();
+
+
+                dropZone.classList.remove(
+                    "dragging"
+                );
+
+
+                const files =
+                    event.dataTransfer.files;
+
+
+                if (!files.length) {
+
+                    return;
+
+                }
+
+
+                selectFile(
+                    files[0]
+                );
+
+            }
+        );
+
+
+        /* =========================================================
+           START TRANSCRIPTION
+        ========================================================= */
+
+        async function startTranscription() {
+
+            if (!currentFile) {
+
+                alert(
+                    "Choose an audio or video lecture first."
+                );
+
+                return;
+
+            }
+
+
+            if (!currentCourse) {
+
+                alert(
+                    "Choose a course first."
+                );
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "processButton"
+                );
+
+
+            button.disabled =
+                true;
+
+
+            document
+            .getElementById(
+                "progressCard"
+            )
+            .style.display =
+                "block";
+
+
+            document
+            .getElementById(
+                "progressStatus"
+            )
+            .innerText =
+                "Uploading lecture...";
+
+
+            document
+            .getElementById(
+                "progressNumber"
+            )
+            .innerText =
+                "0%";
+
+
+            document
+            .getElementById(
+                "progressFill"
+            )
+            .style.width =
+                "0%";
+
+
+            const form =
+                new FormData();
+
+
+            form.append(
+                "media",
+                currentFile
+            );
+
+
+            form.append(
+                "course_id",
+                currentCourse.id
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+
+                        "/transcribe",
+
+                        {
+                            method:
+                                "POST",
+
+                            body:
+                                form
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not start transcription."
+                    );
+
+                }
+
+
+                currentJobId =
+                    data.job_id;
+
+
+                currentLectureId =
+                    data.lecture_id;
+
+
+                currentLectureIsSaved =
+                    false;
+
+
+                currentMediaURL =
+                    null;
+
+
+                document
+                .getElementById(
+                    "lectureTitle"
+                )
+                .innerText =
+                    removeExtension(
+                        data.filename
+                    );
+
+
+                watchProgress();
+
+            }
+
+            catch(error) {
+
+                alert(
+                    error.message
+                );
+
+
+                button.disabled =
+                    false;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        function watchProgress() {
+
+            if (
+                progressSource
+            ) {
+
+                progressSource.close();
+
+            }
+
+
+            progressSource =
+                new EventSource(
+                    `/progress/${currentJobId}`
+                );
+
+
+            progressSource.onmessage =
+                function(event) {
+
+                    const data =
+                        JSON.parse(
+                            event.data
+                        );
+
+
+                    document
+                    .getElementById(
+                        "progressNumber"
+                    )
+                    .innerText =
+                        `${data.progress || 0}%`;
+
+
+                    document
+                    .getElementById(
+                        "progressFill"
+                    )
+                    .style.width =
+                        `${data.progress || 0}%`;
+
+
+                    document
+                    .getElementById(
+                        "progressStatus"
+                    )
+                    .innerText =
+                        data.status
+                        ||
+                        "Processing...";
+
+
+                    currentSegments =
+                        data.segments
+                        || [];
+
+
+                    if (
+                        data.lecture_id
+                    ) {
+
+                        currentLectureId =
+                            data.lecture_id;
+
+                    }
+
+
+                    if (
+                        data.finished
+                    ) {
+
+                        progressSource.close();
+
+
+                        progressSource =
+                            null;
+
+
+                        document
+                        .getElementById(
+                            "processButton"
+                        )
+                        .disabled =
+                            false;
+
+
+                        if (
+                            data.error
+                        ) {
+
+                            alert(
+                                data.error
+                            );
+
+                            return;
+
+                        }
+
+
+                        currentLectureIsSaved =
+                            true;
+
+
+                        currentMediaURL =
+                            `/saved-media/${currentLectureId}`;
+
+
+                        openWorkspace(
+                            data.duration
+                        );
+
+                    }
+
+                };
+
+
+            progressSource.onerror =
+                function() {
+
+                    if (
+                        progressSource
+                    ) {
+
+                        progressSource.close();
+
+                        progressSource =
+                            null;
+
+                    }
+
+                };
+
+        }
+
+
+        /* =========================================================
+           OPEN NEWLY PROCESSED LECTURE
+        ========================================================= */
+
+        function openWorkspace(
+            duration
+        ) {
+
+            document
+            .getElementById(
+                "workspaceCourse"
+            )
+            .innerText =
+                currentCourse.code
+                ||
+                currentCourse.name;
+
+
+            document
+            .getElementById(
+                "lectureMeta"
+            )
+            .innerText =
+                `${formatDuration(
+                    duration
+                )} · Saved lecture`;
+
+
+            document
+            .getElementById(
+                "transcriptSearch"
+            )
+            .value =
+                "";
+
+
+            resetAIWorkspace();
+
+
+            resetTabs();
+
+
+            renderTranscript(
+                currentSegments
+            );
+
+
+            createMediaPlayer();
+
+
+            showView(
+                "workspaceView"
+            );
+
+        }
+
+
+        /* =========================================================
+           MEDIA PLAYER
+        ========================================================= */
+
+        function createMediaPlayer() {
+
+            const container =
+                document.getElementById(
+                    "mediaContainer"
+                );
+
+
+            container.innerHTML =
+                "";
+
+
+            let filename =
+                "";
+
+
+            if (
+                currentFile
+            ) {
+
+                filename =
+                    currentFile.name;
+
+            }
+
+
+            const extension =
+                filename
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+            const videoExtensions = [
+                "mp4",
+                "mov",
+                "webm"
+            ];
+
+
+            if (
+                videoExtensions.includes(
+                    extension
+                )
+            ) {
+
+                currentMedia =
+                    document.createElement(
+                        "video"
+                    );
+
+            }
+
+            else {
+
+                currentMedia =
+                    document.createElement(
+                        "audio"
+                    );
+
+            }
+
+
+            currentMedia.controls =
+                true;
+
+
+            currentMedia.preload =
+                "metadata";
+
+
+            currentMedia.src =
+                currentMediaURL
+                ||
+                `/media/${currentJobId}`;
+
+
+            container.appendChild(
+                currentMedia
+            );
+
+        }
+
+
+        function createSavedMediaPlayer(
+            lecture
+        ) {
+
+            const container =
+                document.getElementById(
+                    "mediaContainer"
+                );
+
+
+            container.innerHTML =
+                "";
+
+
+            const filename =
+                lecture.original_filename
+                ||
+                "";
+
+
+            const extension =
+                filename
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+            const videoExtensions = [
+                "mp4",
+                "mov",
+                "webm"
+            ];
+
+
+            if (
+                videoExtensions.includes(
+                    extension
+                )
+            ) {
+
+                currentMedia =
+                    document.createElement(
+                        "video"
+                    );
+
+            }
+
+            else {
+
+                currentMedia =
+                    document.createElement(
+                        "audio"
+                    );
+
+            }
+
+
+            currentMedia.controls =
+                true;
+
+
+            currentMedia.preload =
+                "metadata";
+
+
+            currentMedia.src =
+                `/saved-media/${lecture.id}`;
+
+
+            container.appendChild(
+                currentMedia
+            );
+
+        }
+
+
+        /* =========================================================
+           TIMESTAMP SEEK
+        ========================================================= */
+
+        function jumpTo(
+            seconds
+        ) {
+
+            if (
+                !currentMedia
+            ) {
+
+                return;
+
+            }
+
+
+            currentMedia.currentTime =
+                Number(
+                    seconds
+                );
+
+
+            const playPromise =
+                currentMedia.play();
+
+
+            if (
+                playPromise
+                &&
+                typeof playPromise.catch
+                === "function"
+            ) {
+
+                playPromise.catch(
+                    function() {}
+                );
+
+            }
+
+
+            document
+            .querySelector(
+                ".player-card"
+            )
+            .scrollIntoView({
+
+                behavior:
+                    "smooth",
+
+                block:
+                    "center"
+
+            });
+
+        }
+
+
+        /* =========================================================
+           TRANSCRIPT
+        ========================================================= */
+
+        function renderTranscript(
+            segments,
+            query = ""
+        ) {
+
+            const container =
+                document.getElementById(
+                    "transcript"
+                );
+
+
+            container.innerHTML =
+                "";
+
+
+            const normalizedQuery =
+                query
+                .trim()
+                .toLowerCase();
+
+
+            let visibleCount =
+                0;
+
+
+            segments.forEach(
+                function(segment) {
+
+                    const text =
+                        segment.text
+                        ||
+                        "";
+
+
+                    if (
+                        normalizedQuery
+                        &&
+                        !text
+                        .toLowerCase()
+                        .includes(
+                            normalizedQuery
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    visibleCount++;
+
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    row.className =
+                        "transcript-line";
+
+
+                    const timestamp =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    timestamp.className =
+                        "timestamp";
+
+
+                    timestamp.innerText =
+                        segment.timestamp;
+
+
+                    timestamp.onclick =
+                        function() {
+
+                            jumpTo(
+                                segment.start
+                            );
+
+                        };
+
+
+                    const textElement =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    textElement.className =
+                        "transcript-text";
+
+
+                    textElement.innerText =
+                        text;
+
+
+                    row.appendChild(
+                        timestamp
+                    );
+
+
+                    row.appendChild(
+                        textElement
+                    );
+
+
+                    container.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+
+            if (
+                visibleCount === 0
+            ) {
+
+                const empty =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                empty.style.color =
+                    "#6e6e73";
+
+
+                empty.style.padding =
+                    "30px 5px";
+
+
+                empty.innerText =
+                    normalizedQuery
+                    ?
+                    "No transcript results found."
+                    :
+                    "No transcript is available.";
+
+
+                container.appendChild(
+                    empty
+                );
+
+            }
+
+        }
+
+
+        function searchTranscript() {
+
+            const query =
+                document
+                .getElementById(
+                    "transcriptSearch"
+                )
+                .value;
+
+
+            renderTranscript(
+                currentSegments,
+                query
+            );
+
+        }
+
+
+        /* =========================================================
+           TABS
+        ========================================================= */
+
+        function showTab(
+            name,
+            button
+        ) {
+
+            document
+            .querySelectorAll(
+                ".panel"
+            )
+            .forEach(
+                function(panel) {
+
+                    panel.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+            .querySelectorAll(
+                ".tab"
+            )
+            .forEach(
+                function(tab) {
+
+                    tab.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+            .getElementById(
+                `${name}Panel`
+            )
+            .classList.add(
+                "active"
+            );
+
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        function resetTabs() {
+
+            document
+            .querySelectorAll(
+                ".panel"
+            )
+            .forEach(
+                function(panel) {
+
+                    panel.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+            .querySelectorAll(
+                ".tab"
+            )
+            .forEach(
+                function(tab) {
+
+                    tab.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+
+            document
+            .getElementById(
+                "transcriptPanel"
+            )
+            .classList.add(
+                "active"
+            );
+
+
+            const transcriptTab =
+                document.querySelector(
+                    '.tab[data-tab="transcript"]'
+                );
+
+
+            if (
+                transcriptTab
+            ) {
+
+                transcriptTab.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           RESET AI WORKSPACE
+        ========================================================= */
+
+        function resetAIWorkspace() {
+
+            document
+            .getElementById(
+                "studyOutput"
+            )
+            .innerHTML =
+                "";
+
+
+            document
+            .getElementById(
+                "studyEmpty"
+            )
+            .style.display =
+                "flex";
+
+
+            document
+            .getElementById(
+                "studyButton"
+            )
+            .disabled =
+                false;
+
+
+            document
+            .getElementById(
+                "studyButton"
+            )
+            .innerText =
+                "Create Study Guide";
+
+
+            document
+            .getElementById(
+                "signalsOutput"
+            )
+            .innerHTML =
+                "";
+
+
+            document
+            .getElementById(
+                "signalsEmpty"
+            )
+            .style.display =
+                "flex";
+
+
+            document
+            .getElementById(
+                "signalsButton"
+            )
+            .disabled =
+                false;
+
+
+            document
+            .getElementById(
+                "signalsButton"
+            )
+            .innerText =
+                "Analyze Lecture";
+
+
+            document
+            .getElementById(
+                "answer"
+            )
+            .style.display =
+                "none";
+
+
+            document
+            .getElementById(
+                "answer"
+            )
+            .innerHTML =
+                "";
+
+
+            document
+            .getElementById(
+                "question"
+            )
+            .value =
+                "";
+
+        }
+
+
+        /* =========================================================
+           STUDY NOTES
+        ========================================================= */
+
+        async function generateStudyNotes() {
+
+            if (
+                !currentLectureId
+            ) {
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "studyButton"
+                );
+
+
+            button.disabled =
+                true;
+
+
+            button.innerText =
+                "Creating guide...";
+
+
+            try {
+
+                let url;
+
+
+                if (
+                    currentJobId
+                    &&
+                    !currentLectureIsSaved
+                ) {
+
+                    url =
+                        `/study-notes/${currentJobId}`;
+
+                }
+
+                else {
+
+                    url =
+                        `/api/lectures/${currentLectureId}/study-notes`;
+
+                }
+
+
+                const response =
+                    await fetch(
+
+                        url,
+
+                        {
+                            method:
+                                "POST"
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not create study guide."
+                    );
+
+                }
+
+
+                document
+                .getElementById(
+                    "studyEmpty"
+                )
+                .style.display =
+                    "none";
+
+
+                const output =
+                    document.getElementById(
+                        "studyOutput"
+                    );
+
+
+                output.innerText =
+                    data.notes;
+
+
+                makeCitationsClickable(
+                    output
+                );
+
+            }
+
+            catch(error) {
+
+                alert(
+                    error.message
+                );
+
+            }
+
+            finally {
+
+                button.disabled =
+                    false;
+
+
+                button.innerText =
+                    "Create Study Guide";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           EXAM SIGNALS
+        ========================================================= */
+
+        async function generateSignals() {
+
+            if (
+                !currentLectureId
+            ) {
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "signalsButton"
+                );
+
+
+            button.disabled =
+                true;
+
+
+            button.innerText =
+                "Analyzing...";
+
+
+            try {
+
+                let url;
+
+
+                if (
+                    currentJobId
+                    &&
+                    !currentLectureIsSaved
+                ) {
+
+                    url =
+                        `/exam-signals/${currentJobId}`;
+
+                }
+
+                else {
+
+                    url =
+                        `/api/lectures/${currentLectureId}/exam-signals`;
+
+                }
+
+
+                const response =
+                    await fetch(
+
+                        url,
+
+                        {
+                            method:
+                                "POST"
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not analyze lecture."
+                    );
+
+                }
+
+
+                document
+                .getElementById(
+                    "signalsEmpty"
+                )
+                .style.display =
+                    "none";
+
+
+                const output =
+                    document.getElementById(
+                        "signalsOutput"
+                    );
+
+
+                output.innerText =
+                    data.signals;
+
+
+                makeCitationsClickable(
+                    output
+                );
+
+            }
+
+            catch(error) {
+
+                alert(
+                    error.message
+                );
+
+            }
+
+            finally {
+
+                button.disabled =
+                    false;
+
+
+                button.innerText =
+                    "Analyze Lecture";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           ASK LECTURE
+        ========================================================= */
+
+        function useQuestion(
+            question
+        ) {
+
+            document
+            .getElementById(
+                "question"
+            )
+            .value =
+                question;
+
+
+            askLecture();
+
+        }
+
+
+        async function askLecture() {
+
+            if (
+                !currentLectureId
+            ) {
+
+                return;
+
+            }
+
+
+            const input =
+                document.getElementById(
+                    "question"
+                );
+
+
+            const question =
+                input.value.trim();
+
+
+            if (!question) {
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    "askButton"
+                );
+
+
+            const answer =
+                document.getElementById(
+                    "answer"
+                );
+
+
+            button.disabled =
+                true;
+
+
+            answer.style.display =
+                "block";
+
+
+            answer.innerText =
+                "Searching this lecture...";
+
+
+            try {
+
+                let url;
+
+
+                if (
+                    currentJobId
+                    &&
+                    !currentLectureIsSaved
+                ) {
+
+                    url =
+                        `/ask/${currentJobId}`;
+
+                }
+
+                else {
+
+                    url =
+                        `/api/lectures/${currentLectureId}/ask`;
+
+                }
+
+
+                const response =
+                    await fetch(
+
+                        url,
+
+                        {
+                            method:
+                                "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    question:
+                                        question
+                                })
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error
+                        ||
+                        "Could not answer question."
+                    );
+
+                }
+
+
+                answer.innerText =
+                    data.answer;
+
+
+                makeCitationsClickable(
+                    answer
+                );
+
+            }
+
+            catch(error) {
+
+                answer.innerText =
+                    error.message;
+
+            }
+
+            finally {
+
+                button.disabled =
+                    false;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           CLICKABLE AI TIMESTAMPS
+        ========================================================= */
+
+        function makeCitationsClickable(
+            element
+        ) {
+
+            const text =
+                element.innerText;
+
+
+            const escaped =
+                escapeHTML(
+                    text
+                );
+
+
+            const regex =
+                /\[(\d{1,2}):(\d{2})(?::(\d{2}))?\]/g;
+
+
+            const html =
+                escaped.replace(
+
+                    regex,
+
+                    function(
+                        match,
+                        first,
+                        second,
+                        third
+                    ) {
+
+                        let seconds;
+
+
+                        if (
+                            third !== undefined
+                        ) {
+
+                            seconds =
+                                parseInt(
+                                    first,
+                                    10
+                                )
+                                * 3600
+                                +
+                                parseInt(
+                                    second,
+                                    10
+                                )
+                                * 60
+                                +
+                                parseInt(
+                                    third,
+                                    10
+                                );
+
+                        }
+
+                        else {
+
+                            seconds =
+                                parseInt(
+                                    first,
+                                    10
+                                )
+                                * 60
+                                +
+                                parseInt(
+                                    second,
+                                    10
+                                );
+
+                        }
+
+
+                        return (
+                            `<span
+                                class="timestamp"
+                                onclick="jumpTo(${seconds})"
+                            >${match}</span>`
+                        );
+
+                    }
+
+                );
+
+
+            element.innerHTML =
+                html;
+
+        }
+
+
+        /* =========================================================
+           CLEAR SELECTED FILE
+        ========================================================= */
+
+        function clearSelectedFile() {
+
+            currentFile =
+                null;
+
+
+            fileInput.value =
+                "";
+
+
+            document
+            .getElementById(
+                "filename"
+            )
+            .innerText =
+                "";
+
+
+            document
+            .getElementById(
+                "progressCard"
+            )
+            .style.display =
+                "none";
+
+
+            document
+            .getElementById(
+                "progressFill"
+            )
+            .style.width =
+                "0%";
+
+
+            document
+            .getElementById(
+                "progressNumber"
+            )
+            .innerText =
+                "0%";
+
+
+            document
+            .getElementById(
+                "progressStatus"
+            )
+            .innerText =
+                "Preparing...";
+
+        }
+
+
+        /* =========================================================
+           CLEAR TEMPORARY JOB
+        ========================================================= */
+
+        async function clearActiveJob() {
+
+            if (
+                !currentJobId
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                progressSource
+            ) {
+
+                progressSource.close();
+
+
+                progressSource =
+                    null;
+
+            }
+
+
+            try {
+
+                await fetch(
+
+                    `/clear/${currentJobId}`,
+
+                    {
+                        method:
+                            "DELETE"
+                    }
+
+                );
+
+            }
+
+            catch(error) {
+
+                console.log(
+                    "Could not clear temporary job."
+                );
+
+            }
+
+
+            currentJobId =
+                null;
+
+        }
+
+
+        /* =========================================================
+           RESET UPLOAD
+        ========================================================= */
+
+        function resetUpload() {
+
+            currentFile =
+                null;
+
+
+            currentSegments =
+                [];
+
+
+            currentJobId =
+                null;
+
+
+            currentLectureId =
+                null;
+
+
+            currentLectureIsSaved =
+                false;
+
+
+            currentMediaURL =
+                null;
+
+
+            if (
+                currentMedia
+            ) {
+
+                currentMedia.pause();
+
+            }
+
+
+            currentMedia =
+                null;
+
+
+            fileInput.value =
+                "";
+
+
+            document
+            .getElementById(
+                "filename"
+            )
+            .innerText =
+                "";
+
+
+            document
+            .getElementById(
+                "progressCard"
+            )
+            .style.display =
+                "none";
+
+
+            document
+            .getElementById(
+                "progressFill"
+            )
+            .style.width =
+                "0%";
+
+
+            document
+            .getElementById(
+                "progressNumber"
+            )
+            .innerText =
+                "0%";
+
+
+            document
+            .getElementById(
+                "progressStatus"
+            )
+            .innerText =
+                "Preparing...";
+
+
+            document
+            .getElementById(
+                "processButton"
+            )
+            .disabled =
+                false;
+
+
+            resetAIWorkspace();
+
+        }
+
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+
+        function removeExtension(
+            filename
+        ) {
+
+            return filename.replace(
+                /\.[^/.]+$/,
+                ""
+            );
+
+        }
+
+
+        function formatDuration(
+            seconds
+        ) {
+
+            const total =
+                Math.floor(
+                    Number(
+                        seconds
+                        || 0
+                    )
+                );
+
+
+            if (
+                total <= 0
+            ) {
+
+                return "Duration unavailable";
+
+            }
+
+
+            const hours =
+                Math.floor(
+                    total / 3600
+                );
+
+
+            const minutes =
+                Math.floor(
+                    (
+                        total % 3600
+                    )
+                    / 60
+                );
+
+
+            const remainingSeconds =
+                total % 60;
+
+
+            if (
+                hours > 0
+            ) {
+
+                return (
+                    `${hours} hr ${minutes} min`
+                );
+
+            }
+
+
+            if (
+                minutes > 0
+            ) {
+
+                return (
+                    `${minutes} min`
+                );
+
+            }
+
+
+            return (
+                `${remainingSeconds} sec`
+            );
+
+        }
+
+
+        function escapeHTML(
+            text
+        ) {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.innerText =
+                text ?? "";
+
+
+            return div.innerHTML;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
